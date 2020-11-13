@@ -14,6 +14,7 @@ import "codemirror/mode/markdown/markdown"
 
 interface Props {
 	open: boolean,
+	initSource?: string,
 	title?: string,
 	onClose?: () => void,
 	onSave?: (source: string) => void
@@ -37,9 +38,13 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function MdEdit(props: Props) {
 	const classes = useStyles()
 	const [preview, setPreview] = React.useState(false)
-	const [source, setSource] = React.useState<string>("")
+	const [source, setSource] = React.useState<string>(props.initSource ? props.initSource : "")
 	return (
-		<Dialog fullScreen open={props.open} onClose={props.onClose} TransitionComponent={SlideUp}>
+		<Dialog fullScreen open={props.open} onClose={props.onClose} TransitionComponent={SlideUp}
+			onExit={()=>{
+				setSource("")
+				setPreview(false)
+			}}>
 			<AppBar position="sticky">
 				<Toolbar>
 					<Grid container justify="space-between" alignItems="center">
@@ -73,6 +78,7 @@ export default function MdEdit(props: Props) {
 						mode: 'markdown',
 						lineNumbers: true,
 						smartIndent: true,
+						lineWrapping: true,
 					}}
 					onBeforeChange={(_editor, _data, value) => {
 						setSource(value)
@@ -85,13 +91,12 @@ export default function MdEdit(props: Props) {
 						width: "min( 100vh, 100vw )",
 						paddingLeft: "1em",
 						paddingRight: "1em",
+						overflowWrap: "break-word",
 					}}>
 						<ReactMarkdown>{source}</ReactMarkdown>
 					</div>
 				</Grid>
 			</div>
-			<Paper hidden={true} style={{margin: "3px", padding: "10px", minHeight: "60vh"}}>
-			</Paper>
 		</Dialog>
 	)
 }
