@@ -8,7 +8,7 @@ function App() {
 	return (
 		<>
 			<Button onClick={() => setDialog(true)}>show</Button>
-			<MdEdit open={dialog} onClose={()=> setDialog(false)} title="sample"></MdEdit>
+			<MdEdit open={dialog} onClose={()=> setDialog(false)}/>
 		</>
 	);
 }

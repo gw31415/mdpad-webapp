@@ -18,16 +18,26 @@ const katex = require('react-katex')
 const InlineMath = katex.InlineMath
 const BlockMath = katex.BlockMath
 const renderers = {
-	inlineMath: (source: {value: string}) => <InlineMath>{source.value}</InlineMath>,
-	math: (source: {value: string}) => <BlockMath>{source.value}</BlockMath>,
+	inlineMath: (source: {value: string}) =>
+		<InlineMath>{source.value}</InlineMath>,
+	math: (source: {value: string}) =>
+		<div style={{
+			overflowX: "auto",
+		}}>
+			<BlockMath>{source.value}</BlockMath>
+		</div>,
+}
+
+interface Data {
+	source: string,
+	name: string
 }
 
 interface Props {
 	open: boolean,
-	initSource?: string,
-	title?: string,
+	initData?: Data,
 	onClose?: () => void,
-	onSave?: (source: string) => void
+	onSave?: (data: Data) => void
 }
 
 const SlideUp = React.forwardRef(
@@ -48,7 +58,8 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function MdEdit(props: Props) {
 	const classes = useStyles()
 	const [preview, setPreview] = React.useState(false)
-	const [source, setSource] = React.useState<string>(props.initSource ? props.initSource : "")
+	const [source, setSource] = React.useState<string>(props.initData ? props.initData.source : "")
+	const [name, setName] = React.useState<string>(props.initData ? props.initData.name : "")
 	return (
 		<Dialog fullScreen open={props.open} onClose={props.onClose} TransitionComponent={SlideUp}
 			onExit={() => {
@@ -62,7 +73,7 @@ export default function MdEdit(props: Props) {
 							<CloseIcon />
 						</IconButton>
 						<Typography variant="h6" className={classes.title}>
-							{props.title}
+							{name !== "" ? name : "new"}
 						</Typography>
 						<Grid item>
 							<IconButton edge="end" color="inherit" onClick={() => setPreview(!preview)} aria-label="close">
@@ -113,6 +124,7 @@ export default function MdEdit(props: Props) {
 					<div hidden={source !== ""}
 						style={{
 							marginTop: "3ex",
+							color: "grey",
 						}}><i>Preview is to be displayed here.</i></div>
 				</Grid>
 			</div>
