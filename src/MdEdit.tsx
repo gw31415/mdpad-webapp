@@ -12,6 +12,16 @@ import {Controlled as CodeMirror} from 'react-codemirror2'
 import "./codemirror.css"
 import "codemirror/mode/markdown/markdown"
 
+import math from 'remark-math'
+import 'katex/dist/katex.min.css'
+const katex = require('react-katex')
+const InlineMath = katex.InlineMath
+const BlockMath = katex.BlockMath
+const renderers = {
+	inlineMath: (source: {value: string}) => <InlineMath>{source.value}</InlineMath>,
+	math: (source: {value: string}) => <BlockMath>{source.value}</BlockMath>,
+}
+
 interface Props {
 	open: boolean,
 	initSource?: string,
@@ -95,7 +105,10 @@ export default function MdEdit(props: Props) {
 							paddingRight: "1em",
 							overflowWrap: "break-word",
 						}}>
-						<ReactMarkdown>{source}</ReactMarkdown>
+						<ReactMarkdown
+							plugins={[math]}
+							renderers={renderers}
+						>{source}</ReactMarkdown>
 					</div>
 					<div hidden={source !== ""}
 						style={{
