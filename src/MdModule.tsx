@@ -33,13 +33,6 @@ interface Data {
 	name: string
 }
 
-interface Props {
-	open: boolean,
-	initData?: Data,
-	onClose?: () => void,
-	onSave?: (data: Data) => void
-}
-
 const SlideUp = React.forwardRef(
 	(
 		props: TransitionProps & {children?: React.ReactElement},
@@ -55,7 +48,12 @@ const useStyles = makeStyles((theme: Theme) =>
 		},
 	}))
 
-export default function MdEdit(props: Props) {
+export function MdEdit(props: {
+	open: boolean,
+	initData?: Data,
+	onClose?: () => void,
+	onSave?: (data: Data) => void,
+}) {
 	const classes = useStyles()
 	const [preview, setPreview] = React.useState(false)
 	const [source, setSource] = React.useState<string>(props.initData ? props.initData.source : "")
@@ -106,31 +104,34 @@ export default function MdEdit(props: Props) {
 					}}
 				/>
 			</div>
-			<div hidden={!preview}
-				style={{
-					overflowX: "hidden"
-				}}>
-				<Grid container justify="center" alignItems="center">
-					<div
-						hidden={source === ""}
-						style={{
-							width: "min( 100%, 100vmin )",
-							paddingLeft: "1em",
-							paddingRight: "1em",
-							overflowWrap: "break-word",
-						}}>
-						<ReactMarkdown
-							plugins={[math]}
-							renderers={renderers}
-						>{source}</ReactMarkdown>
-					</div>
-					<div hidden={source !== ""}
-						style={{
-							marginTop: "3ex",
-							color: "grey",
-						}}><i>Preview is to be displayed here.</i></div>
-				</Grid>
-			</div>
+			<MdPage hidden={!preview} nullMsg="Preview is to be displayed here." source={source} />
 		</Dialog>
+	)
+}
+
+export function MdPage(props: {hidden: boolean, source: string, nullMsg: string}) {
+	return (
+		<div hidden={props.hidden} style={{overflowX: "hidden"}}>
+			<Grid container justify="center" alignItems="center">
+				<div
+					hidden={props.source === ""}
+					style={{
+						width: "min( 100%, 100vmin )",
+						paddingLeft: "1em",
+						paddingRight: "1em",
+						overflowWrap: "break-word",
+					}}>
+					<ReactMarkdown
+						plugins={[math]}
+						renderers={renderers}
+					>{props.source}</ReactMarkdown>
+				</div>
+				<div hidden={props.nullMsg !== undefined && props.source !== ""}
+					style={{
+						marginTop: "3ex",
+						color: "grey",
+					}}><i>{props.nullMsg}</i></div>
+			</Grid>
+		</div>
 	)
 }
