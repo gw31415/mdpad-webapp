@@ -1,11 +1,13 @@
-import {AppBar, Dialog, Grid, IconButton, Toolbar, Typography} from '@material-ui/core'
+import {AppBar, Dialog, Grid, IconButton, Menu, MenuItem, Toolbar, Typography} from '@material-ui/core'
 import CloseIcon from '@material-ui/icons/Close'
-import Save from '@material-ui/icons/Save'
-import View from '@material-ui/icons/Visibility'
-import Edit from '@material-ui/icons/Edit'
+import SaveIcon from '@material-ui/icons/Save'
+import MoreVertIcon from '@material-ui/icons/MoreVert'
+import ViewIcon from '@material-ui/icons/Visibility'
+import EditIcon from '@material-ui/icons/Edit'
 import {TransitionProps} from '@material-ui/core/transitions'
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles'
 import Slide from '@material-ui/core/Slide'
+import RenameDialog from './RenameDialog'
 import React from 'react'
 import ReactMarkdown from 'react-markdown'
 import {Controlled as CodeMirror} from 'react-codemirror2'
@@ -58,11 +60,16 @@ export function MdEdit(props: {
 	const [preview, setPreview] = React.useState(false)
 	const [source, setSource] = React.useState<string>(props.initData ? props.initData.source : "")
 	const [name, setName] = React.useState<string>(props.initData ? props.initData.name : "")
+	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+	const [renameDialog, setRenameDialog] = React.useState(false)
 	return (
 		<Dialog fullScreen open={props.open} onClose={props.onClose} TransitionComponent={SlideUp}
-			onExit={() => {
-				setSource("")
+			onExited={() => {
 				setPreview(false)
+				setSource("")
+				setName("")
+				setAnchorEl(null)
+				setRenameDialog(false)
 			}}>
 			<AppBar position="sticky">
 				<Toolbar>
@@ -75,13 +82,39 @@ export function MdEdit(props: {
 						</Typography>
 						<Grid item>
 							<IconButton edge="end" color="inherit" onClick={() => setPreview(!preview)} aria-label="close">
-								{preview ? <Edit /> : <View />}
+								{preview ? <EditIcon /> : <ViewIcon />}
 							</IconButton>
 							<IconButton edge="end" color="inherit" onClick={
 								() => {if (props.onSave) props.onSave({name: name, source: source})}
 							} aria-label="close">
-								<Save />
+								<SaveIcon />
 							</IconButton>
+							<IconButton edge="end" color="inherit" onClick={
+								e => {setAnchorEl(e.currentTarget)}
+							} aria-label="close">
+								<MoreVertIcon />
+							</IconButton>
+							<Menu
+								id="simple-menu"
+								anchorEl={anchorEl}
+								keepMounted
+								open={Boolean(anchorEl)}
+								onClose={() => setAnchorEl(null)}
+							>
+								<MenuItem onClick={() => {
+									setAnchorEl(null)
+									setRenameDialog(true)
+								}}>Rename</MenuItem>
+							</Menu>
+							<RenameDialog
+								initialName={name}
+								onOK={name => {
+									setRenameDialog(false)
+									setName(name)
+								}}
+								open={renameDialog}
+								onExit={() => setRenameDialog(false)}
+							></RenameDialog>
 						</Grid>
 					</Grid>
 				</Toolbar>
@@ -96,8 +129,8 @@ export function MdEdit(props: {
 					options={{
 						mode: 'markdown',
 						lineNumbers: true,
-						smartIndent: true,
 						lineWrapping: true,
+						autofocus: true,
 					}}
 					onBeforeChange={(_editor, _data, value) => {
 						setSource(value)
