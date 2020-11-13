@@ -52,6 +52,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export function MdEdit(props: {
 	open: boolean,
+	highlightEnabled: boolean,
 	initData?: Data,
 	onClose?: () => void,
 	onSave?: (data: Data) => void,
@@ -127,7 +128,7 @@ export function MdEdit(props: {
 				<CodeMirror
 					value={source}
 					options={{
-						mode: 'markdown',
+						mode: props.highlightEnabled ? 'markdown' : 'plain',
 						lineNumbers: true,
 						lineWrapping: true,
 						autofocus: true,
@@ -140,6 +141,10 @@ export function MdEdit(props: {
 			<MdPage hidden={!preview} nullMsg="Preview is to be displayed here." source={source} />
 		</Dialog>
 	)
+}
+
+MdEdit.defaultProps = {
+	highlightEnabled: true
 }
 
 export function MdPage(props: {hidden: boolean, source: string, nullMsg: string}) {
