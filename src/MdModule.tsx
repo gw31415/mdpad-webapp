@@ -10,7 +10,7 @@ import Slide from '@material-ui/core/Slide'
 import RenameDialog from './RenameDialog'
 import React from 'react'
 import ReactMarkdown from 'react-markdown'
-import {Controlled, UnControlled} from 'react-codemirror2'
+import {Controlled as CodeMirror} from 'react-codemirror2'
 import "./codemirror.css"
 import "codemirror/mode/markdown/markdown"
 
@@ -127,7 +127,7 @@ export function MdEdit(props: {
 			}} hidden={preview}>
 				{
 					props.richTextAreaEnabled
-						? <Controlled
+						? <CodeMirror
 							value={source}
 							options={{
 								mode: props.richTextAreaEnabled ? 'markdown' : 'plain',
@@ -139,16 +139,22 @@ export function MdEdit(props: {
 								setSource(value)
 							}}
 						/>
-						: <UnControlled
+						: <textarea
 							value={source}
-							options={{
-								mode: 'markdown',
-								lineNumbers: true,
-								lineWrapping: true,
-								autofocus: true,
+							style={{
+								minHeight: "calc( 100% - 3ex )",
+								width: "100%",
+								boxSizing: "border-box",
+								resize: "none",
+								outline: "none",
+								border: "none",
+								background: "none",
+								WebkitAppearance: "none",
+								padding: "1ex",
 							}}
-							onChange={(_editor, _data, value) => {
-								setSource(value)
+							placeholder="Edit markdown..."
+							onChange={e => {
+								setSource(e.target.value)
 							}}
 						/>
 
