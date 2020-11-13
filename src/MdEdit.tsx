@@ -8,16 +8,16 @@ import {createStyles, makeStyles, Theme} from '@material-ui/core/styles'
 import Slide from '@material-ui/core/Slide'
 import React from 'react'
 import ReactMarkdown from 'react-markdown'
+import {Controlled as CodeMirror} from 'react-codemirror2'
+import "./codemirror.css"
+import "codemirror/mode/markdown/markdown"
 
 interface Props {
 	open: boolean,
 	title?: string,
 	onClose?: () => void,
-	children?: string,
 	onSave?: (source: string) => void
 }
-
-const lineHeight = "4ex"
 
 const SlideUp = React.forwardRef(
 	(
@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function MdEdit(props: Props) {
 	const classes = useStyles()
 	const [preview, setPreview] = React.useState(false)
-	const [source, setSource] = React.useState<string>(`${props.children}`)
+	const [source, setSource] = React.useState<string>("")
 	return (
 		<Dialog fullScreen open={props.open} onClose={props.onClose} TransitionComponent={SlideUp}>
 			<AppBar position="sticky">
@@ -67,22 +67,17 @@ export default function MdEdit(props: Props) {
 				height: "100%",
 				padding: "none",
 			}} hidden={preview}>
-				<textarea style={{
-					resize: "none",
-					outline: "none",
-					border: "none",
-					background: "none",
-					WebkitAppearance: "none",
-					padding: "5px",
-					width: "100%",
-					height: `calc(100% - ${lineHeight} / 2)`,
-					lineHeight: lineHeight,
-					boxSizing: "border-box",
-				}}
-					placeholder="Markdown Editor"
-					onChange={e => {
-						setSource(e.target.value)
-					}} />
+				<CodeMirror
+					value={source}
+					options={{
+						mode: 'markdown',
+						lineNumbers: true,
+						smartIndent: true,
+					}}
+					onBeforeChange={(_editor, _data, value) => {
+						setSource(value)
+					}}
+				/>
 			</div>
 			<div hidden={!preview}>
 				<Grid container justify="center" alignItems="center">
