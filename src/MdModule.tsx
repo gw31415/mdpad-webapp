@@ -10,7 +10,7 @@ import Slide from '@material-ui/core/Slide'
 import RenameDialog from './RenameDialog'
 import React from 'react'
 import ReactMarkdown from 'react-markdown'
-import {Controlled as CodeMirror} from 'react-codemirror2'
+import {Controlled, UnControlled} from 'react-codemirror2'
 import "./codemirror.css"
 import "codemirror/mode/markdown/markdown"
 
@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export function MdEdit(props: {
 	open: boolean,
-	highlightEnabled: boolean,
+	richTextAreaEnabled: boolean,
 	initData?: Data,
 	onClose?: () => void,
 	onSave?: (data: Data) => void,
@@ -125,18 +125,34 @@ export function MdEdit(props: {
 				height: "100%",
 				padding: "none",
 			}} hidden={preview}>
-				<CodeMirror
-					value={source}
-					options={{
-						mode: props.highlightEnabled ? 'markdown' : 'plain',
-						lineNumbers: true,
-						lineWrapping: true,
-						autofocus: true,
-					}}
-					onBeforeChange={(_editor, _data, value) => {
-						setSource(value)
-					}}
-				/>
+				{
+					props.richTextAreaEnabled
+						? <Controlled
+							value={source}
+							options={{
+								mode: props.richTextAreaEnabled ? 'markdown' : 'plain',
+								lineNumbers: true,
+								lineWrapping: true,
+								autofocus: true,
+							}}
+							onBeforeChange={(_editor, _data, value) => {
+								setSource(value)
+							}}
+						/>
+						: <UnControlled
+							value={source}
+							options={{
+								mode: 'markdown',
+								lineNumbers: true,
+								lineWrapping: true,
+								autofocus: true,
+							}}
+							onChange={(_editor, _data, value) => {
+								setSource(value)
+							}}
+						/>
+
+				}
 			</div>
 			<MdPage hidden={!preview} nullMsg="Preview is to be displayed here." source={source} />
 		</Dialog>

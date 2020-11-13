@@ -11,10 +11,10 @@ export default function App() {
 			<FormControlLabel control={
 				<Switch checked={syntax} onChange={e => {setSyntax(e.target.checked)}} />
 			}
-				label="Syntax highlight"
+				label="Rich text area"
 			/>
 			<Button onClick={() => setDialog(true)}>show</Button>
-			<MdEdit open={dialog} onClose={() => setDialog(false)} highlightEnabled={syntax} />
+			<MdEdit open={dialog} onClose={() => setDialog(false)} richTextAreaEnabled={syntax} />
 		</>
 	)
 }
