@@ -87,14 +87,19 @@ export default function MdEdit(props: Props) {
 			</div>
 			<div hidden={!preview}>
 				<Grid container justify="center" alignItems="center">
-					<div style={{
-						width: "min( 100vh, 100vw )",
+					<div
+						hidden={source === ""}
+						style={{
+						width: "min( 100%, 100vmin )",
 						paddingLeft: "1em",
 						paddingRight: "1em",
 						overflowWrap: "break-word",
 					}}>
 						<ReactMarkdown>{source}</ReactMarkdown>
 					</div>
+					<div hidden={source !== ""}
+						style={{
+						}}><i>Preview is to be displayed here.</i></div>
 				</Grid>
 			</div>
 		</Dialog>
