@@ -73,15 +73,15 @@ export default function MdEdit(props: Props) {
 							<CloseIcon />
 						</IconButton>
 						<Typography variant="h6" className={classes.title}>
-							{name !== "" ? name : "new"}
+							{name !== "" ? name : "(name not set)"}
 						</Typography>
 						<Grid item>
 							<IconButton edge="end" color="inherit" onClick={() => setPreview(!preview)} aria-label="close">
-								{
-									preview ? <Edit /> : <View />
-								}
+								{preview ? <Edit /> : <View />}
 							</IconButton>
-							<IconButton edge="end" color="inherit" onClick={props.onClose} aria-label="close">
+							<IconButton edge="end" color="inherit" onClick={
+								() => {if (props.onSave) props.onSave({name: name, source: source})}
+							} aria-label="close">
 								<Save />
 							</IconButton>
 						</Grid>
@@ -106,7 +106,10 @@ export default function MdEdit(props: Props) {
 					}}
 				/>
 			</div>
-			<div hidden={!preview}>
+			<div hidden={!preview}
+				style={{
+					overflowX: "hidden"
+				}}>
 				<Grid container justify="center" alignItems="center">
 					<div
 						hidden={source === ""}
