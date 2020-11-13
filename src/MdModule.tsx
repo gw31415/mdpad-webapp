@@ -141,6 +141,7 @@ export function MdEdit(props: {
 						/>
 						: <textarea
 							value={source}
+							autoFocus={true}
 							style={{
 								minHeight: "calc( 100% - 3ex )",
 								width: "100%",
