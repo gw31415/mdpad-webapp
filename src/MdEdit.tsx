@@ -41,7 +41,7 @@ export default function MdEdit(props: Props) {
 	const [source, setSource] = React.useState<string>(props.initSource ? props.initSource : "")
 	return (
 		<Dialog fullScreen open={props.open} onClose={props.onClose} TransitionComponent={SlideUp}
-			onExit={()=>{
+			onExit={() => {
 				setSource("")
 				setPreview(false)
 			}}>
@@ -90,15 +90,16 @@ export default function MdEdit(props: Props) {
 					<div
 						hidden={source === ""}
 						style={{
-						width: "min( 100%, 100vmin )",
-						paddingLeft: "1em",
-						paddingRight: "1em",
-						overflowWrap: "break-word",
-					}}>
+							width: "min( 100%, 100vmin )",
+							paddingLeft: "1em",
+							paddingRight: "1em",
+							overflowWrap: "break-word",
+						}}>
 						<ReactMarkdown>{source}</ReactMarkdown>
 					</div>
 					<div hidden={source !== ""}
 						style={{
+							marginTop: "3ex",
 						}}><i>Preview is to be displayed here.</i></div>
 				</Grid>
 			</div>
