@@ -1,26 +1,16 @@
+import {Button} from '@material-ui/core';
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import MdEdit from './MdEdit'
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const [dialog, setDialog] = React.useState(false)
+	return (
+		<>
+			<Button onClick={() => setDialog(true)}>show</Button>
+			<MdEdit open={dialog} onClose={()=> setDialog(false)} title="sample"></MdEdit>
+		</>
+	);
 }
 
 export default App;
