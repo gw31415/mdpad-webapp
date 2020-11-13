@@ -1,4 +1,4 @@
-import {AppBar, Dialog, Grid, IconButton, Paper, Toolbar, Typography} from '@material-ui/core'
+import {AppBar, Dialog, Grid, IconButton, Toolbar, Typography} from '@material-ui/core'
 import CloseIcon from '@material-ui/icons/Close'
 import Save from '@material-ui/icons/Save'
 import View from '@material-ui/icons/Visibility'
